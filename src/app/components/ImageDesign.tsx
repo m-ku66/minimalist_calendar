@@ -1,12 +1,27 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type ImageDesignProps = {
   imageDesign: number;
+  resetSignal: boolean;
 };
 
 export default function ImageDesign(props: ImageDesignProps) {
-  const { imageDesign } = props;
+  const { imageDesign, resetSignal } = props;
+
+  // Add a state to trigger re-render on reset signal change
+  const [resetTrigger, setResetTrigger] = useState(false);
+
+  useEffect(() => {
+    // Listen for changes in the reset signal and trigger the reset
+    if (resetSignal) {
+      // Toggle reset trigger to cause re-render
+      setResetTrigger(true);
+      setTimeout(() => {
+        setResetTrigger(false);
+      }, 10);
+    }
+  }, [resetSignal]);
 
   // This state will store clip path patterns that'll be reused for
   // the different image designs
@@ -147,5 +162,5 @@ export default function ImageDesign(props: ImageDesignProps) {
     return renderedDesign;
   }
 
-  return <>{renderDesign(imageDesign)}</>;
+  return <>{resetTrigger ? null : renderDesign(imageDesign)}</>;
 }

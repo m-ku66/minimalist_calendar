@@ -10,6 +10,18 @@ export default function Home() {
   const [currentDate, setCurrentDate] = useState(getCurrentDate());
   const [quote, setQuote] = useState("");
   const [imageDesign, setimageDesign] = useState(1);
+  const [resetSignal, setResetSignal] = useState(false); // State for reset signal
+
+  // Function to handle date selection
+  const handleDateSelect = () => {
+    // Set the reset signal to true to trigger reset in ImageDesign component
+    setResetSignal(true);
+
+    // Reset the signal after a short delay to allow for animation reset
+    setTimeout(() => {
+      setResetSignal(false);
+    }, 100);
+  };
 
   // Set up an effect to update the current date every second
   useEffect(() => {
@@ -28,7 +40,7 @@ export default function Home() {
     if (randomQuote !== null) {
       setQuote(randomQuote);
     }
-  }, []);
+  }, [resetSignal]);
 
   return (
     <>
@@ -60,11 +72,20 @@ export default function Home() {
 
             <div className="appear3 relative flex w-full h-[55vh] bg-transparent justify-end items-end">
               <div className="appearLate absolute z-[10] flex bg-transparent">
-                <p className="select-none quote text-[7rem] leading-[1.3]">
+                <p
+                  className={
+                    resetSignal
+                      ? "hidden"
+                      : "appearLate select-none quote text-[7rem] leading-[1.3]"
+                  }
+                >
                   {quote}
                 </p>
               </div>
-              <ImageDesign imageDesign={imageDesign} />
+              <ImageDesign
+                imageDesign={imageDesign}
+                resetSignal={resetSignal}
+              />
             </div>
 
             <div className="appearLate relative flex items-center w-full h-fit overflow-x-hidden bg-transparent mb-[0.5%] mt-[0.5%] pr-[10%]">
@@ -81,6 +102,7 @@ export default function Home() {
                 <DateScroll
                   imageDesign={imageDesign}
                   setImageDesign={setimageDesign}
+                  handleDateSelect={handleDateSelect}
                 />
               </div>
             </div>
@@ -96,7 +118,7 @@ export default function Home() {
 
               <div className="flex justify-end w-[50%] h-fit bg-transparent">
                 <h1
-                  className={`appearLate text-[#4088DC] leading-[1] ${styles.lightTheme.text.title.xSmall}`}
+                  className={`appearLate select-none text-[#4088DC] leading-[1] ${styles.lightTheme.text.title.xSmall}`}
                 >
                   {`${currentDate.month} ${currentDate.year}`}
                 </h1>
@@ -119,7 +141,6 @@ export default function Home() {
 
 /**
  * TO DOs:
- * 1. Set up some sort of component re-render for ImageDesign to get it's animations playing smoothly(MUST)
  * 2. Add more image designs(MUST)
  * 3. Mobile display(MUST)
  * 4. Set up JP language compatibility, time-based color change(optional)

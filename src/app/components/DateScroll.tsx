@@ -5,10 +5,11 @@ import getCurrentDate from "./CurrentDate";
 type DateScrollProps = {
   imageDesign: number;
   setImageDesign: React.Dispatch<React.SetStateAction<number>>;
+  handleDateSelect: () => void;
 };
 
 export default function DateScroll(props: DateScrollProps) {
-  const { imageDesign, setImageDesign } = props;
+  const { imageDesign, setImageDesign, handleDateSelect } = props;
 
   // The current date object
   const currentDate = getCurrentDate();
@@ -47,11 +48,11 @@ export default function DateScroll(props: DateScrollProps) {
     // which image design to show. If we go this route, you'll need to refactor your
     // imageDesign component accordingly...
     //
-    // if (imageDesign === 1) {
-    //   setImageDesign(2);
-    // } else if (imageDesign === 2) {
-    //   setImageDesign(1);
-    // }
+    if (imageDesign === 1) {
+      setImageDesign(2);
+    } else if (imageDesign === 2) {
+      setImageDesign(1);
+    }
   }, [selectedDate]);
 
   // In the return we check to see if the currently selected date matches with the date
@@ -59,10 +60,13 @@ export default function DateScroll(props: DateScrollProps) {
   // selected date accordingly
   return (
     <>
-      <div className="flex gap-5">
+      <div className="flex gap-5 z-[-1]">
         {daysArray.map((day, dayIndex) => (
           <div
-            onClick={() => setSelectedDate(day)}
+            onClick={() => {
+              setSelectedDate(day);
+              handleDateSelect();
+            }}
             className={`${
               selectedDate === day
                 ? selectedStyle.selectedDiv
